@@ -1,0 +1,24 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": ["@asd14/eslint-config/targets/react-ts"],
+  "root": true,
+
+  "rules": {
+    // disable until upstream issues fixed
+    "jsdoc/check-line-alignment": "off",
+
+    // "jsdoc/check-line-alignment": ["error", "always", {
+    //   "tags": ["tags"]
+    // }],
+    "jsdoc/check-tag-names": ["warn", {
+      "definedTags": ["tag", "signature"]
+    }]
+  },
+
+  "settings": {
+    // Recommended if you use eslint_d
+    "import/cache": {
+      "lifetime": 5
+    }
+  }
+}

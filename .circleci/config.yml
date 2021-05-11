@@ -1,0 +1,112 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+
+#
+# YAML variable templates
+#
+job_defaults: &job_defaults
+  working_directory: ~/m-repo
+  docker:
+    - image: circleci/node:lts
+
+job_filter: &job_filter
+  filters:
+    branches:
+      only:
+        - master
+
+#
+# Run all jobs in sequence
+#
+workflows:
+  version: 2
+  npm_publish:
+    jobs:
+      - setup:
+          <<: *job_filter
+      - test:
+          <<: *job_filter
+          requires:
+            - setup
+      - coverage:
+          <<: *job_filter
+          requires:
+            - test
+      - publish:
+          <<: *job_filter
+          requires:
+            - coverage
+
+#
+# Define atomic jobs
+#
+jobs:
+  setup:
+    <<: *job_defaults
+
+    steps:
+      - checkout
+
+      - run:
+          name: "m: Install npm packages"
+          command: "npm run setup"
+
+      - run:
+          name: "m: Babel compile"
+          command: "npm run build"
+
+      - save_cache:
+          paths:
+            - node_modules
+            - dist
+          key: m-{{ .Branch }}-{{ .Revision }}
+
+  test:
+    <<: *job_defaults
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - m-{{ .Branch }}-{{ .Revision }}
+
+      - run:
+          name: "m: Run linter"
+          command: "npm run lint"
+
+      - run:
+          name: "m: Run tests"
+          command: "npm run test"
+
+  coverage:
+    <<: *job_defaults
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - m-{{ .Branch }}-{{ .Revision }}
+
+      - run:
+          name: "m: Publish test coverage to COVERALLS"
+          command: "npm run coverage"
+
+  publish:
+    <<: *job_defaults
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - m-{{ .Branch }}-{{ .Revision }}
+
+      - run:
+          name: "m: Release to npm with semantic-release"
+          command: "npm run publish"
+

@@ -1,0 +1,31 @@
+{
+  "include": ["src/**/*", "types/*"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2019",
+    "outDir": "dist",
+
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Enable strict null checks. Enabling this setting is recommended.
+    // Requires TypeScript version 2.0 or later.
+    "strictNullChecks": true,
+
+    // Report errors in .js files. Requires TypeScript version 2.3 or later.
+    "checkJs": true,
+
+    // Allow javascript files to be compiled. Requires TypeScript version 1.8 or later.
+    "allowJs": true,
+
+    // Emit '__importStar' and '__importDefault' helpers for runtime babel
+    // ecosystem compatibility and enable '--allowSyntheticDefaultImports' for
+    // typesystem compatibility. Enabling this setting is recommended.
+    // Requires TypeScript version 2.7 or later.
+    "esModuleInterop": true
+  }
+}
